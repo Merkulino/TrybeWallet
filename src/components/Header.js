@@ -6,7 +6,7 @@ class Header extends Component {
   render() {
     const { email } = this.props;
     return (
-      <header>
+      <header className="headerContent container">
         <span>
           <p
             data-testid="email-field"
