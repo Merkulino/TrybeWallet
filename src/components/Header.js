@@ -6,9 +6,8 @@ class Header extends Component {
   renderSumExchange = (expenses = []) => { // Feio e cheio de gambiarra pra passar no teste
     const result = expenses.reduce((acc, { value, exchangeRates, currency }) => {
       const exchangeValues = Object.values(exchangeRates);
-      const iterableExchange = exchangeValues.filter((key) => key.codein !== 'BRLT');
+      const currCoin = exchangeValues.filter((coinVal) => coinVal.code === currency);
 
-      const currCoin = iterableExchange.filter((coinVal) => coinVal.code === currency);
       const reducerAcc = acc + Number(value)
       * Number(currCoin[0].ask);
 

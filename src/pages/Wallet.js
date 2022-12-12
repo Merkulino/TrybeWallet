@@ -77,6 +77,7 @@ class Wallet extends React.Component {
             </select>
           </label>
           <label htmlFor="method-input">
+            Metodo de pagamento:
             <select
               id="method-input"
               data-testid="method-input"
@@ -92,6 +93,7 @@ class Wallet extends React.Component {
           </label>
 
           <label htmlFor="tag-input">
+            Tipo:
             <select
               id="tag-input"
               data-testid="tag-input"
