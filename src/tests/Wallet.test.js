@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { renderWithRedux, renderWithRouterAndRedux } from './helpers/renderWith';
+import { renderWithRedux } from './helpers/renderWith';
 import Wallet from '../pages/Wallet';
 
 describe('Wallet page', () => {
@@ -18,7 +18,7 @@ describe('Wallet page', () => {
   });
 
   test('save global store', () => {
-    const { store } = renderWithRedux(<Wallet />);
+    renderWithRedux(<Wallet />);
     const inputValue = screen.getByRole('textbox', { name: /valor:/i });
     const inputDescription = screen.getByRole('textbox', { name: /descrição:/i });
 
