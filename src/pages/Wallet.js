@@ -7,11 +7,13 @@ import { requestExchangeAPI, requestPriceAPI } from '../redux/actions';
 import store from '../redux/store';
 
 const INITIAL_STATE = {
+  // idEdit: 0,
   value: '',
   currency: 'USD',
   method: 'Dinheiro',
   tag: 'Alimentação',
   description: '',
+  // editExchange: false,
 };
 
 class Wallet extends React.Component {
@@ -22,6 +24,28 @@ class Wallet extends React.Component {
     dispatch(requestExchangeAPI());
   }
 
+  componentDidUpdate(prevProps) {
+    const { wallet: { editor } } = store.getState();
+    if (editor !== prevProps.editor) {
+      this.updateExpense();
+    }
+  }
+
+  updateExpense = () => {
+    const { wallet: { expenses, idToEdit } } = store.getState();
+    const currentExpense = expenses.find((expense) => expense.id === Number(idToEdit));
+
+    return this.setState({
+      // idEdit: idToEdit,
+      value: currentExpense.value,
+      currency: currentExpense.currency,
+      method: currentExpense.method,
+      tag: currentExpense.tag,
+      description: currentExpense.description,
+      // editExchange: true,
+    });
+  };
+
   onHandleChange = ({ target }) => {
     const { name, value } = target;
     this.setState({
@@ -30,16 +54,24 @@ class Wallet extends React.Component {
   };
 
   submitFormValue = () => {
-    const { wallet } = store.getState();
-    const expenseID = wallet.expenses.length;
+    const { idEdit, editExchange } = this.state;
     const { dispatch } = this.props;
-    dispatch(requestPriceAPI(this.state, expenseID));
-    this.setState({ ...INITIAL_STATE });
+    if (editExchange) {
+      console.log('id: ', idEdit);
+      // Enviar os valores do estado pra um dispatch
+      // Atualizar os valores no elemento de despesa selecionado
+      // Manter a mesma estrutura
+    } else {
+      const { wallet } = store.getState();
+      const expenseID = wallet.expenses.length;
+      dispatch(requestPriceAPI(this.state, expenseID)); // O avaliador reclama do idEdit e editExchange
+      this.setState({ ...INITIAL_STATE });
+    }
   };
 
   render() {
     const { value, currency,
-      method, tag, description } = this.state;
+      method, tag, description, editExchange } = this.state;
     const { currencies } = this.props;
 
     return (
@@ -122,7 +154,7 @@ class Wallet extends React.Component {
             type="button"
             onClick={ this.submitFormValue }
           >
-            Adicionar Despesa
+            { editExchange ? 'Editar Despesa' : 'Adicionar Despesa'}
           </button>
         </form>
         <Table />

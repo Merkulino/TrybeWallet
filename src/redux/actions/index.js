@@ -2,6 +2,7 @@ const USER_LOGIN = 'USER_LOGIN';
 const EXCHANGEAPI = 'EXCHANGE_API';
 const CURRENCE_COINPRICE = 'CURRENCE_COINPRICE';
 const DELETE_EXPENSE = 'DELETE_EXPENSE';
+const UPDATE_EXPENSE = 'UPDATE_EXPENSE';
 
 const userLogin = (email) => ({
   type: USER_LOGIN,
@@ -20,6 +21,11 @@ const requestPriceAPISuccessful = (data) => ({
 
 const deleteExpense = (expense) => ({
   type: DELETE_EXPENSE,
+  payload: expense,
+});
+
+const updateState = (expense) => ({
+  type: UPDATE_EXPENSE,
   payload: expense,
 });
 
@@ -46,4 +52,4 @@ function requestPriceAPI(obj, id) {
   };
 }
 
-export { userLogin, requestExchangeAPI, requestPriceAPI, deleteExpense };
+export { userLogin, requestExchangeAPI, requestPriceAPI, deleteExpense, updateState };

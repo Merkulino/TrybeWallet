@@ -2,18 +2,19 @@ import React, { Component } from 'react';
 import Proptypes from 'prop-types';
 import { connect } from 'react-redux';
 import '../styles/table.css';
-import { deleteExpense } from '../redux/actions';
+import { deleteExpense, updateState } from '../redux/actions';
 import store from '../redux/store';
 
 class Table extends Component {
+  editExpense = ({ target }) => {
+    const { dispatch } = this.props;
+    dispatch(updateState(target.id));
+  };
+
   deleteExpense = ({ target }) => {
     const { dispatch } = this.props;
     const { wallet: { expenses } } = store.getState();
-    // Tirar do estado global
-    // tirar da tabela
-    // Atualizar valor do Header
     const stateUpdated = expenses.filter((expense) => expense.id !== Number(target.id));
-    console.log(...stateUpdated);
     dispatch(deleteExpense(stateUpdated));
   };
 
@@ -71,6 +72,8 @@ class Table extends Component {
                     <button
                       type="button"
                       data-testid="edit-btn"
+                      id={ expense.id }
+                      onClick={ this.editExpense }
                     >
                       Editar
                     </button>
