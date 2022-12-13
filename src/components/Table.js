@@ -23,10 +23,7 @@ class Table extends Component {
           </tr>
           <tbody>
             { expenses.map((expense) => {
-              // const exchangeValues = Object.values(expense.exchangeRates);
               const currencyExchange = expense.exchangeRates[expense.currency];
-              // const convertedValue = Math.round((expense.value * currencyExchange.ask) * 100) / 100).toFixed(2);
-              console.log(currencyExchange);
               return (
                 <tr
                   className="tableCells"
@@ -58,7 +55,18 @@ class Table extends Component {
                     Real
                   </td>
                   <td>
-                    { expense.id }
+                    <button
+                      type="button"
+                      data-testid="edit-btn"
+                    >
+                      Editar
+                    </button>
+                    <button
+                      type="button"
+                      data-testid="delete-btn"
+                    >
+                      Apagar
+                    </button>
                   </td>
                 </tr>
               );
