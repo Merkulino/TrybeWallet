@@ -35,7 +35,6 @@ class Wallet extends React.Component {
     const expenseID = wallet.expenses.length;
     const { dispatch } = this.props;
     const coinDefault = currency.length <= 2 ? 'USD' : currency; // Gambiarra pra passar no teste
-    console.log(coinDefault);
     dispatch(requestPriceAPI(coinDefault, this.state, expenseID));
     this.setState({ ...INITIAL_STATE });
   };
