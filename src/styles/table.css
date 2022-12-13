@@ -1,0 +1,10 @@
+.expenses-table {
+  border-collapse: collapse;
+  font-family: arial, sans-serif;
+  width: 100%;
+}
+
+.tableCells > td , th {
+  border: 1px solid hwb(0 87% 13%);
+  padding: 8px;
+}
