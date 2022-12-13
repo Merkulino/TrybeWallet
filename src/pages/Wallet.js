@@ -30,12 +30,10 @@ class Wallet extends React.Component {
   };
 
   submitFormValue = () => {
-    const { currency } = this.state;
     const { wallet } = store.getState();
     const expenseID = wallet.expenses.length;
     const { dispatch } = this.props;
-    const coinDefault = currency.length <= 2 ? 'USD' : currency; // Gambiarra pra passar no teste
-    dispatch(requestPriceAPI(coinDefault, this.state, expenseID));
+    dispatch(requestPriceAPI(this.state, expenseID));
     this.setState({ ...INITIAL_STATE });
   };
 

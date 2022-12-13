@@ -1,6 +1,7 @@
 const USER_LOGIN = 'USER_LOGIN';
 const EXCHANGEAPI = 'EXCHANGE_API';
 const CURRENCE_COINPRICE = 'CURRENCE_COINPRICE';
+const DELETE_EXPENSE = 'DELETE_EXPENSE';
 
 const userLogin = (email) => ({
   type: USER_LOGIN,
@@ -17,6 +18,11 @@ const requestPriceAPISuccessful = (data) => ({
   payload: data,
 });
 
+const deleteExpense = (expense) => ({
+  type: DELETE_EXPENSE,
+  payload: expense,
+});
+
 function requestExchangeAPI() {
   return async (dispatch) => {
     const response = await fetch('https://economia.awesomeapi.com.br/json/all');
@@ -26,13 +32,10 @@ function requestExchangeAPI() {
   };
 }
 
-function requestPriceAPI(coin, obj, id) {
-  // const coinDefault = coin.length === 0 ? 'USD' : coin; // Gambiarra pra passar no teste
+function requestPriceAPI(obj, id) {
   return async (dispatch) => {
     const response = await fetch('https://economia.awesomeapi.com.br/json/all');
     const coinPrice = await response.json();
-    // const exchangeCode = Object.keys(coinPrice);
-    // const allexchanges = Object.values(coinPrice);
     console.log(coinPrice);
     const objSave = {
       id,
@@ -43,4 +46,4 @@ function requestPriceAPI(coin, obj, id) {
   };
 }
 
-export { userLogin, requestExchangeAPI, requestPriceAPI };
+export { userLogin, requestExchangeAPI, requestPriceAPI, deleteExpense };

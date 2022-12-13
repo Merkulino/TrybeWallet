@@ -29,7 +29,8 @@ class Header extends Component {
           </p>
           <p>Despesa Total:</p>
           <p data-testid="total-field">
-            { expenses.length ? this.renderSumExchange(expenses) : 0 }
+            { expenses.length
+              ? this.renderSumExchange(expenses) : Math.round(0).toFixed(2) }
 
           </p>
           <p data-testid="header-currency-field">BRL</p>
