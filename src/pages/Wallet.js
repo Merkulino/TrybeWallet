@@ -59,24 +59,16 @@ class Wallet extends React.Component {
     const { dispatch } = this.props;
 
     if (editExchange) {
-      this.setState((state, nextState) => {
-        console.log(nextState);
-        return ({
-          ...INITIAL_STATE,
-        });
-      }, () => {
-        dispatch(editNewExpense(
-          {
-            value,
-            currency,
-            method,
-            tag,
-            description,
-          },
-          idEdit,
-        ));
-      });
-      // this.setState({ ...INITIAL_STATE });
+      dispatch(editNewExpense(
+        {
+          value,
+          currency,
+          method,
+          tag,
+          description,
+        },
+        idEdit,
+      ));
     } else {
       const { wallet } = store.getState();
       const expenseID = wallet.expenses.length;
@@ -91,7 +83,7 @@ class Wallet extends React.Component {
         expenseID,
       ));
     }
-    await this.setState({ ...INITIAL_STATE });
+    this.setState({ ...INITIAL_STATE });
   };
 
   render() {
@@ -178,6 +170,7 @@ class Wallet extends React.Component {
           <button
             type="button"
             onClick={ this.submitFormValue }
+            data-testid="submitExpense"
           >
             { editExchange ? 'Editar Despesa' : 'Adicionar Despesa'}
           </button>

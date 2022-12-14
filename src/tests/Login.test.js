@@ -1,7 +1,9 @@
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+// import { act } from 'react-dom/test-utils';
 import { renderWithRedux, renderWithRouterAndRedux } from './helpers/renderWith';
 import Login from '../pages/Login';
+import mockData from './helpers/mockData';
 
 const PASSWORD_INPUT = 'password-input';
 
@@ -49,5 +51,27 @@ describe('Login page', () => {
     history.push('/carteira');
 
     expect(history.location.pathname).toBe('/carteira');
+  });
+
+  test.only('submit button', async () => {
+    global.fetch = jest.fn().mockResolvedValue({
+      json: jest.fn().mockResolvedValue(mockData),
+    });
+    renderWithRouterAndRedux(<Login />);
+
+    const btn = screen.getByRole('button', { name: /entrar/i });
+    const emailInput = screen.getByRole('textbox');
+    const passwordInput = screen.getByTestId(PASSWORD_INPUT);
+
+    expect(btn).toBeDisabled();
+
+    userEvent.type(emailInput, 'email@mail.com');
+    userEvent.type(passwordInput, 'senha123456789');
+
+    // act(() => userEvent.click(btn));
+
+    // waitFor(() => {
+    //   expect(history.location.pathname).toBe('/carteira');
+    // });
   });
 });
