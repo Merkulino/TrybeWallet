@@ -4,7 +4,7 @@ const INITIAL_STATE = {
   currencies: [], // array de string
   expenses: [], // array de objetos, com cada objeto tendo as chaves id, value, currency, method, tag, description e exchangeRates
   editor: false, // valor booleano que indica de uma despesa está sendo editada
-  idToEdit: 0,
+  idToEdit: '',
 };
 
 const wallet = (state = INITIAL_STATE, action) => {
@@ -32,6 +32,13 @@ const wallet = (state = INITIAL_STATE, action) => {
       ...state,
       editor: true,
       idToEdit: action.payload,
+    };
+  case 'EDITNEWEXPENSE':
+    return {
+      ...state,
+      expenses: action.payload,
+      editor: false,
+      idToEdit: '',
     };
   default:
     return state;

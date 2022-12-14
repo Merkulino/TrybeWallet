@@ -3,17 +3,17 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Header from '../components/Header';
 import Table from '../components/Table';
-import { requestExchangeAPI, requestPriceAPI } from '../redux/actions';
+import { requestExchangeAPI, requestPriceAPI, editNewExpense } from '../redux/actions';
 import store from '../redux/store';
 
 const INITIAL_STATE = {
-  // idEdit: 0,
+  idEdit: '',
   value: '',
   currency: 'USD',
   method: 'Dinheiro',
   tag: 'Alimentação',
   description: '',
-  // editExchange: false,
+  editExchange: false,
 };
 
 class Wallet extends React.Component {
@@ -26,7 +26,7 @@ class Wallet extends React.Component {
 
   componentDidUpdate(prevProps) {
     const { wallet: { editor } } = store.getState();
-    if (editor !== prevProps.editor) {
+    if (editor && editor !== prevProps.editor) {
       this.updateExpense();
     }
   }
@@ -36,13 +36,13 @@ class Wallet extends React.Component {
     const currentExpense = expenses.find((expense) => expense.id === Number(idToEdit));
 
     return this.setState({
-      // idEdit: idToEdit,
+      idEdit: idToEdit,
       value: currentExpense.value,
       currency: currentExpense.currency,
       method: currentExpense.method,
       tag: currentExpense.tag,
       description: currentExpense.description,
-      // editExchange: true,
+      editExchange: true,
     });
   };
 
@@ -53,20 +53,45 @@ class Wallet extends React.Component {
     });
   };
 
-  submitFormValue = () => {
-    const { idEdit, editExchange } = this.state;
+  submitFormValue = async () => {
+    const { idEdit, editExchange, value, currency,
+      method, tag, description } = this.state;
     const { dispatch } = this.props;
+
     if (editExchange) {
-      console.log('id: ', idEdit);
-      // Enviar os valores do estado pra um dispatch
-      // Atualizar os valores no elemento de despesa selecionado
-      // Manter a mesma estrutura
+      this.setState((state, nextState) => {
+        console.log(nextState);
+        return ({
+          ...INITIAL_STATE,
+        });
+      }, () => {
+        dispatch(editNewExpense(
+          {
+            value,
+            currency,
+            method,
+            tag,
+            description,
+          },
+          idEdit,
+        ));
+      });
+      // this.setState({ ...INITIAL_STATE });
     } else {
       const { wallet } = store.getState();
       const expenseID = wallet.expenses.length;
-      dispatch(requestPriceAPI(this.state, expenseID)); // O avaliador reclama do idEdit e editExchange
-      this.setState({ ...INITIAL_STATE });
+      dispatch(requestPriceAPI(
+        {
+          value,
+          currency,
+          method,
+          tag,
+          description,
+        },
+        expenseID,
+      ));
     }
+    await this.setState({ ...INITIAL_STATE });
   };
 
   render() {
@@ -135,7 +160,7 @@ class Wallet extends React.Component {
               <option value="Lazer"> Lazer </option>
               <option value="Trabalho"> Trabalho </option>
               <option value="Transporte"> Transporte </option>
-              <option value="Saude"> Saúde </option>
+              <option value="Saúde"> Saúde </option>
             </select>
 
           </label>

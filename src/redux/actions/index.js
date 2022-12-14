@@ -1,8 +1,11 @@
+import store from '../store';
+
 const USER_LOGIN = 'USER_LOGIN';
 const EXCHANGEAPI = 'EXCHANGE_API';
 const CURRENCE_COINPRICE = 'CURRENCE_COINPRICE';
 const DELETE_EXPENSE = 'DELETE_EXPENSE';
 const UPDATE_EXPENSE = 'UPDATE_EXPENSE';
+const EDITNEWEXPENSE = 'EDITNEWEXPENSE';
 
 const userLogin = (email) => ({
   type: USER_LOGIN,
@@ -29,6 +32,23 @@ const updateState = (expense) => ({
   payload: expense,
 });
 
+const editNewExpense = (obj, id) => {
+  const { wallet: { expenses } } = store.getState();
+  const currentExpense = expenses.find((expense) => expense.id === Number(id));
+
+  const exchangeUpdated = { ...currentExpense, ...obj };
+
+  const expensesUpdated = expenses
+    .map((expense) => (expense.id === exchangeUpdated.id ? exchangeUpdated : expense));
+
+  return (
+    {
+      type: EDITNEWEXPENSE,
+      payload: expensesUpdated,
+    }
+  );
+};
+
 function requestExchangeAPI() {
   return async (dispatch) => {
     const response = await fetch('https://economia.awesomeapi.com.br/json/all');
@@ -42,7 +62,6 @@ function requestPriceAPI(obj, id) {
   return async (dispatch) => {
     const response = await fetch('https://economia.awesomeapi.com.br/json/all');
     const coinPrice = await response.json();
-    console.log(coinPrice);
     const objSave = {
       id,
       ...obj,
@@ -52,4 +71,5 @@ function requestPriceAPI(obj, id) {
   };
 }
 
-export { userLogin, requestExchangeAPI, requestPriceAPI, deleteExpense, updateState };
+export { userLogin, requestExchangeAPI, requestPriceAPI,
+  deleteExpense, updateState, editNewExpense };
