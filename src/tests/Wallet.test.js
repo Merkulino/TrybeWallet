@@ -8,6 +8,16 @@ import mockData from './helpers/mockData';
 import WalletForm from '../components/WalletForm';
 
 describe('Wallet page', () => {
+  beforeEach(() => {
+    global.fetch = jest.fn().mockResolvedValue({
+      json: jest.fn().mockResolvedValue(mockData),
+    });
+  });
+
+  afterEach(() => {
+    global.fetch.mockClear();
+  });
+
   test('if has the right html elements', () => {
     renderWithRedux(<Wallet />);
     expect(screen.getByText(/email/i)).toBeInTheDocument();
@@ -30,14 +40,9 @@ describe('Wallet page', () => {
     userEvent.type(inputDescription, 'Testando esse projeto chato');
     userEvent.click(screen.getByRole('button', { name: /adicionar despesa/i }));
 
-    // console.log(store.getState().wallet);
-    // expect(store.getState().wallet.expenses).toHaveLength(1); // Não deu
-
     expect(inputValue).toHaveTextContent('');
     expect(inputDescription).toHaveTextContent('');
   });
-
-  test('Validate inputs', () => {});
 
   test('call API', () => {
     global.fetch = jest.fn().mockResolvedValue({
@@ -63,10 +68,7 @@ describe('Wallet page', () => {
     expect(screen.getByRole('columnheader', { name: /editar\/excluir/i })).toBeInTheDocument();
   });
 
-  test('if has table elements', async () => {
-    global.fetch = jest.fn().mockResolvedValue({
-      json: jest.fn().mockResolvedValue(mockData),
-    });
+  test('if has table elements and delete expense', async () => {
     const initialState = {
       user: {
         email: 'mail@mail.com', // string que armazena o email da pessoa usuária
@@ -84,71 +86,74 @@ describe('Wallet page', () => {
             USD: { code: 'USD', codein: 'BRL', name: 'Dólar Americano/Real Brasileiro', ask: '5.3228' },
           },
         }], // array de objetos, com cada objeto tendo as chaves id, value, currency, method, tag, description e exchangeRates
-        editor: false, // valor booleano que indica de uma despesa está sendo editada
-        idToEdit: 0, // valor numérico que armazena o id da despesa que esta sendo editada
+        editor: true, // valor booleano que indica de uma despesa está sendo editada
+        idToEdit: '', // valor numérico que armazena o id da despesa que esta sendo editada
       },
     };
 
-    renderWithRedux(<Wallet />, { initialState });
-    userEvent.type(screen.getByRole('textbox', { name: /valor:/i }), '10');
-    userEvent.type(screen.getByRole('textbox', { name: /descrição:/i }), 'Nova despesa');
-    userEvent.click(screen.getByRole('button', { name: /adicionar despesa/i }));
+    const { store } = renderWithRouterAndRedux(<Wallet />, { initialState });
 
-    expect(screen.getByRole('textbox', { name: /valor:/i })).toHaveTextContent('');
-    await waitFor(async () => {
-      const btnEdit = screen.getByRole('button', { name: /editar/i });
-      const btnDelete = screen.getByRole('button', { name: /apagar/i });
-      expect(screen.getByRole('cell', { name: /teste/i })).toBeInTheDocument();
-      expect(screen.getByRole('cell', { name: /dólar americano\/real brasileiro/i })).toBeInTheDocument();
-      expect(btnEdit).toBeInTheDocument();
-      expect(btnDelete).toBeInTheDocument();
-    });
+    const btnEdit = screen.getByRole('button', { name: /editar/i });
     const btnDelete = screen.getByRole('button', { name: /apagar/i });
+    const addEditBtn = screen.getByTestId('submitExpense');
+    expect(screen.getByRole('cell', { name: /teste/i })).toBeInTheDocument();
+    expect(screen.getByRole('cell', { name: /dólar americano\/real brasileiro/i })).toBeInTheDocument();
+    expect(btnEdit).toBeInTheDocument();
+    expect(btnDelete).toBeInTheDocument();
+    expect(addEditBtn).toBeInTheDocument();
+    expect(store.getState()).toBe(initialState);
+    expect(store.getState().wallet.expenses).toHaveLength(1);
 
+    // Apagar despesa
     userEvent.click(btnDelete);
     expect(btnDelete).not.toBeInTheDocument();
+    expect(screen.queryByRole('cell', { name: /teste/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('cell', { name: /dólar americano\/real brasileiro/i })).not.toBeInTheDocument();
+
+    expect(store.getState().wallet.expenses).toHaveLength(0);
   });
 
-  test.only('the right values on expanse table element', async () => {
+  test.only('edit expense', async () => {
     global.fetch = jest.fn().mockResolvedValue({
       json: jest.fn().mockResolvedValue(mockData),
     });
+    renderWithRouterAndRedux(<App />, { initialEntries: ['/carteira'] });
 
-    renderWithRouterAndRedux(<App />, {
-      initialEntries: ['/carteira'],
-    });
     const inputValue = screen.getByRole('textbox', { name: /valor:/i });
+    const inputCoin = screen.getByRole('combobox', { name: /moeda:/i });
+    const inputPayment = screen.getByRole('combobox', { name: /metodo de pagamento:/i });
+    const inputType = screen.getByRole('combobox', { name: /tipo:/i });
     const inputDesc = screen.getByRole('textbox', { name: /descrição:/i });
     const btnEnciar = screen.getByRole('button', { name: /adicionar despesa/i });
 
-    userEvent.type(inputValue, '69');
-    userEvent.type(inputDesc, 'Agora vai essa merda');
+    expect(screen.queryByTestId('edit-btn')).not.toBeInTheDocument();
+
+    userEvent.type(inputValue, '761');
+    const usdOption = await screen.findByRole('option', { name: /usd/i });
+    userEvent.selectOptions(inputCoin, usdOption);
+    userEvent.selectOptions(inputPayment, screen.getByRole('option', { name: /dinheiro/i }));
+    userEvent.selectOptions(inputType, screen.getByRole('option', { name: /trabalho/i }));
+    userEvent.type(inputDesc, 'Agora vai');
     act(() => userEvent.click(btnEnciar));
 
     const btnEditar = await screen.findByTestId('edit-btn');
+    expect(btnEditar).toBeInTheDocument();
+
     act(() => userEvent.click(btnEditar));
 
-    userEvent.type(inputDesc, 'Vamo ver');
-
+    // const addEditBtn = await screen.findByRole('button', { name: /editar despesa/i });
     await waitFor(() => {
-      // expect(screen.getByRole('edit-btn')).toBeInTheDocument();
-      act(() => {
-        userEvent.click(screen.getByRole('button', { name: /adicionar despesa/i }));
-      });
+      // const addEditBtn = screen.findByRole('button', { name: /editar despesa/i });
+
+      const addEditBtn = screen.getByTestId('submitExpense');
+      expect(addEditBtn).toHaveTextContent(/editar despesa/i);
+
+      // expect(screen.getByRole('textbox', { name: /descrição:/i })).toBe('Agora vai');
     });
-
-    // act(() => userEvent.click(screen.findByRole('button', { name: /editar despesa/i })));
-
-    // waitFor(() => {
-    //   expect(screen.findByText(/vamo ver/i)).toBeInTheDocument();
-    // });
   });
 
-  test('wallet form not used', () => {
+  test('Wallet Form not used', () => {
     renderWithRouterAndRedux(<WalletForm />);
-    expect(screen.getByText(/WalletForm/i)).toBeInTheDocument();
-  });
-
-  test('edit expense', async () => {
+    expect(screen.getByText(/walletform/i)).toBeInTheDocument();
   });
 });

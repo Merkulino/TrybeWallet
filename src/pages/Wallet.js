@@ -3,6 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Header from '../components/Header';
 import Table from '../components/Table';
+import WalletForm from '../components/WalletForm';
 import { requestExchangeAPI, requestPriceAPI, editNewExpense } from '../redux/actions';
 import store from '../redux/store';
 
@@ -176,6 +177,7 @@ class Wallet extends React.Component {
           </button>
         </form>
         <Table />
+        <WalletForm />
       </div>
     );
   }

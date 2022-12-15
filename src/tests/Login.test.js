@@ -1,10 +1,11 @@
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-// import { act } from 'react-dom/test-utils';
+import { act } from 'react-dom/test-utils';
 import { renderWithRedux, renderWithRouterAndRedux } from './helpers/renderWith';
 import Login from '../pages/Login';
-import mockData from './helpers/mockData';
+import App from '../App';
 
+const EMAIL_TEXT = 'email@mail.com';
 const PASSWORD_INPUT = 'password-input';
 
 describe('Login page', () => {
@@ -38,7 +39,7 @@ describe('Login page', () => {
 
     expect(btn).toBeDisabled();
 
-    userEvent.type(emailInput, 'email@mail.com');
+    userEvent.type(emailInput, EMAIL_TEXT);
     userEvent.type(passwordInput, 'senha123456789');
 
     expect(btn).not.toBeDisabled();
@@ -53,11 +54,8 @@ describe('Login page', () => {
     expect(history.location.pathname).toBe('/carteira');
   });
 
-  test.only('submit button', async () => {
-    global.fetch = jest.fn().mockResolvedValue({
-      json: jest.fn().mockResolvedValue(mockData),
-    });
-    renderWithRouterAndRedux(<Login />);
+  test('submit button', async () => {
+    const { history, store } = renderWithRouterAndRedux(<App />);
 
     const btn = screen.getByRole('button', { name: /entrar/i });
     const emailInput = screen.getByRole('textbox');
@@ -65,13 +63,12 @@ describe('Login page', () => {
 
     expect(btn).toBeDisabled();
 
-    userEvent.type(emailInput, 'email@mail.com');
+    userEvent.type(emailInput, EMAIL_TEXT);
     userEvent.type(passwordInput, 'senha123456789');
 
-    // act(() => userEvent.click(btn));
+    act(() => userEvent.click(btn));
 
-    // waitFor(() => {
-    //   expect(history.location.pathname).toBe('/carteira');
-    // });
+    expect(history.location.pathname).toBe('/carteira');
+    expect(store.getState().user.email).toBe(EMAIL_TEXT);
   });
 });
