@@ -3,17 +3,15 @@ import Proptypes from 'prop-types';
 import { connect } from 'react-redux';
 import '../styles/table.css';
 import { deleteExpense, updateState } from '../redux/actions';
-import store from '../redux/store';
 
 class Table extends Component {
-  editExpense = ({ target }) => {
+  editExpense = (id) => {
     const { dispatch } = this.props;
-    dispatch(updateState(target.id));
+    dispatch(updateState(id));
   };
 
   deleteExpense = ({ target }) => {
-    const { dispatch } = this.props;
-    const { wallet: { expenses } } = store.getState();
+    const { dispatch, expenses } = this.props;
     const stateUpdated = expenses.filter((expense) => expense.id !== Number(target.id));
     dispatch(deleteExpense(stateUpdated));
   };
@@ -72,8 +70,7 @@ class Table extends Component {
                     <button
                       type="button"
                       data-testid="edit-btn"
-                      id={ expense.id }
-                      onClick={ this.editExpense }
+                      onClick={ () => this.editExpense(expense.id) }
                     >
                       Editar
                     </button>

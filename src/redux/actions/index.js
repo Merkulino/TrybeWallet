@@ -1,5 +1,3 @@
-import store from '../store';
-
 const USER_LOGIN = 'USER_LOGIN';
 const EXCHANGEAPI = 'EXCHANGE_API';
 const CURRENCE_COINPRICE = 'CURRENCE_COINPRICE';
@@ -32,22 +30,12 @@ const updateState = (expense) => ({
   payload: expense,
 });
 
-const editNewExpense = (obj, id) => {
-  const { wallet: { expenses } } = store.getState();
-  const currentExpense = expenses.find((expense) => expense.id === Number(id));
-
-  const exchangeUpdated = { ...currentExpense, ...obj };
-
-  const expensesUpdated = expenses
-    .map((expense) => (expense.id === exchangeUpdated.id ? exchangeUpdated : expense));
-
-  return (
-    {
-      type: EDITNEWEXPENSE,
-      payload: expensesUpdated,
-    }
-  );
-};
+const editNewExpense = (expensesUpdated) => (
+  {
+    type: EDITNEWEXPENSE,
+    payload: expensesUpdated,
+  }
+);
 
 function requestExchangeAPI() {
   return async (dispatch) => {

@@ -26,14 +26,14 @@ class Wallet extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { wallet: { editor } } = store.getState();
+    const { editor } = this.props;
     if (editor && editor !== prevProps.editor) {
       this.updateExpense();
     }
   }
 
   updateExpense = () => {
-    const { wallet: { expenses, idToEdit } } = store.getState();
+    const { expenses, idToEdit } = this.props;
     const currentExpense = expenses.find((expense) => expense.id === Number(idToEdit));
 
     return this.setState({
@@ -60,16 +60,17 @@ class Wallet extends React.Component {
     const { dispatch } = this.props;
 
     if (editExchange) {
-      dispatch(editNewExpense(
-        {
-          value,
-          currency,
-          method,
-          tag,
-          description,
-        },
-        idEdit,
-      ));
+      const obj = { value, currency, method, tag, description };
+      const { expenses } = this.props;
+
+      const currentExpense = expenses.find((expense) => expense.id === Number(idEdit));
+
+      const exchangeUpdated = { ...currentExpense, ...obj };
+
+      const expensesUpdated = expenses
+        .map((expens) => (expens.id === exchangeUpdated.id ? exchangeUpdated : expens));
+
+      dispatch(editNewExpense(expensesUpdated));
     } else {
       const { wallet } = store.getState();
       const expenseID = wallet.expenses.length;

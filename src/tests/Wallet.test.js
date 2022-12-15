@@ -114,25 +114,15 @@ describe('Wallet page', () => {
   });
 
   test.only('edit expense', async () => {
-    global.fetch = jest.fn().mockResolvedValue({
-      json: jest.fn().mockResolvedValue(mockData),
-    });
     renderWithRouterAndRedux(<App />, { initialEntries: ['/carteira'] });
 
     const inputValue = screen.getByRole('textbox', { name: /valor:/i });
-    const inputCoin = screen.getByRole('combobox', { name: /moeda:/i });
-    const inputPayment = screen.getByRole('combobox', { name: /metodo de pagamento:/i });
-    const inputType = screen.getByRole('combobox', { name: /tipo:/i });
     const inputDesc = screen.getByRole('textbox', { name: /descrição:/i });
     const btnEnciar = screen.getByRole('button', { name: /adicionar despesa/i });
 
     expect(screen.queryByTestId('edit-btn')).not.toBeInTheDocument();
 
     userEvent.type(inputValue, '761');
-    const usdOption = await screen.findByRole('option', { name: /usd/i });
-    userEvent.selectOptions(inputCoin, usdOption);
-    userEvent.selectOptions(inputPayment, screen.getByRole('option', { name: /dinheiro/i }));
-    userEvent.selectOptions(inputType, screen.getByRole('option', { name: /trabalho/i }));
     userEvent.type(inputDesc, 'Agora vai');
     act(() => userEvent.click(btnEnciar));
 
@@ -141,14 +131,17 @@ describe('Wallet page', () => {
 
     act(() => userEvent.click(btnEditar));
 
-    // const addEditBtn = await screen.findByRole('button', { name: /editar despesa/i });
     await waitFor(() => {
-      // const addEditBtn = screen.findByRole('button', { name: /editar despesa/i });
+      expect(screen.getByRole('button', { name: /editar despesa/i })).toBeInTheDocument();
+      expect(screen.getByRole('textbox', { name: /valor:/i })).toHaveValue('761');
+    });
 
-      const addEditBtn = screen.getByTestId('submitExpense');
-      expect(addEditBtn).toHaveTextContent(/editar despesa/i);
+    userEvent.type(inputValue, '658');
+    userEvent.type(inputDesc, 'Agora vai com desconto ');
+    userEvent.click(screen.getByRole('button', { name: /editar despesa/i }));
 
-      // expect(screen.getByRole('textbox', { name: /descrição:/i })).toBe('Agora vai');
+    await waitFor(() => {
+      expect(screen.queryByRole('button', { name: /editar despesa/i })).not.toBeInTheDocument();
     });
   });
 
