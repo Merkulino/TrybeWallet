@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 class Header extends Component {
-  renderSumExchange = (expenses) => { // Feio e cheio de gambiarra pra passar no teste
+  renderSumExchange = (expenses) => { // Refactor
     const result = expenses.reduce((acc, { value, exchangeRates, currency }) => {
       const exchangeValues = Object.values(exchangeRates);
       const currCoin = exchangeValues.filter((coinVal) => coinVal.code === currency);
