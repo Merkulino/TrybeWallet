@@ -32,7 +32,7 @@ A interface da pagina ainda esta em desenvolvimento, por enquanto só existe uma
 
 ![image preview](./src/imgs/firstpageexemple.png)
 
-Todos os arquivos desenvolvidos por mim estão dentro da pasta /src, os restantes são arquivos de configuração ou arquivos desenvolvidos pela Trybe
+Todos os arquivos desenvolvidos por mim estão dentro da pasta `src`, os restantes, são arquivos de configuração ou arquivos desenvolvidos pela Trybe
 ## Como rodar 🚀
 
 Caso queira executar esse projeto em sua máquina você pode:
