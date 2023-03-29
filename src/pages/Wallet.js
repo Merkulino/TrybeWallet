@@ -96,6 +96,7 @@ class Wallet extends React.Component {
     return (
       <div>
         <Header />
+        {/* componentizar esse formulario Wallet Form */}
         <form className="walletFormComponent container">
           <label htmlFor="value-input">
             Valor:

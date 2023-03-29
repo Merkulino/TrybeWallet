@@ -113,7 +113,7 @@ describe('Wallet page', () => {
     expect(store.getState().wallet.expenses).toHaveLength(0);
   });
 
-  test.only('edit expense', async () => {
+  test('edit expense', async () => {
     renderWithRouterAndRedux(<App />, { initialEntries: ['/carteira'] });
 
     const inputValue = screen.getByRole('textbox', { name: /valor:/i });
