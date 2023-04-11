@@ -20,10 +20,13 @@ const requestPriceAPISuccessful = (data) => ({
   payload: data,
 });
 
-const deleteExpense = (expense) => ({
-  type: DELETE_EXPENSE,
-  payload: expense,
-});
+const deleteExpense = (expense) => {
+  console.log(expense);
+  return ({
+    type: DELETE_EXPENSE,
+    payload: expense,
+  });
+};
 
 const updateState = (expense) => ({
   type: UPDATE_EXPENSE,

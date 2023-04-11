@@ -13,15 +13,17 @@ code {
 }
 
 .mainContent {
+  background-color: #F5F6FA;
   display: flex;
   justify-content: center;
   align-content: center;
-  background-color: #F5F6FA;
+  margin: auto;
+  min-height: 100vh;
+  height: max-content;
 }
 
 .container {
   border: solid black 1px;
-  height: 100%;
   border-radius: 5pt;
   display: flex;
   padding: 10px;
