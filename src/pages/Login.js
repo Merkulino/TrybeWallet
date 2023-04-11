@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { userLogin } from '../redux/actions';
+import '../styles/login.scss';
 
 const INITIAL_STATE = {
   email: '',
@@ -45,9 +46,12 @@ class Login extends React.Component {
     const { email, password, isInvalid } = this.state;
 
     return (
-      <div>
-        <form action="">
+      <div className="backContainerLogin">
+        <form className="container formLogin">
+          <p>Login</p>
           <label htmlFor="email-input">
+            Email
+            <br />
             <input
               type="text"
               id="email-input"
@@ -55,9 +59,12 @@ class Login extends React.Component {
               name="email"
               value={ email }
               onChange={ this.onHandleChange }
+              placeholder="mail@exemple.com"
             />
           </label>
           <label htmlFor="password-input">
+            Password
+            <br />
             <input
               type="password"
               id="password-input"
@@ -65,6 +72,7 @@ class Login extends React.Component {
               name="password"
               value={ password }
               onChange={ this.onHandleChange }
+              placeholder="**********"
             />
           </label>
           <button

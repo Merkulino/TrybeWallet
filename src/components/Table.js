@@ -20,7 +20,7 @@ class Table extends Component {
     const { expenses } = this.props;
 
     return (
-      <div className="table-content container">
+      <div className="table-content">
         <table className="expenses-table">
           <tr className="tableCells">
             <th>Descrição</th>

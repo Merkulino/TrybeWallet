@@ -1,0 +1,23 @@
+.backContainerLogin {
+  display: flex;
+  align-items: center;
+}
+
+.formLogin {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: space-around;
+  gap: 10px;
+  width: 180px;
+  height: fit-content;
+  padding: 0 10px 30px;
+  font-size: 11pt;
+  label {
+    font-size: 10pt;
+  }
+  input {
+    font-size: 10pt;
+  }
+}
+  

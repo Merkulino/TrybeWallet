@@ -1,0 +1,11 @@
+.headerContent {
+  span {
+    display: flex;
+    justify-content: space-between;
+    span {
+      gap: 10px
+    }
+    padding: 0 10px;
+  }
+  margin: 0 20px;
+}

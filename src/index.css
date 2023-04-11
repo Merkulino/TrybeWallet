@@ -12,9 +12,18 @@ code {
     monospace;
 }
 
+.mainContent {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  background-color: #F5F6FA;
+}
+
 .container {
   border: solid black 1px;
+  height: 100%;
   border-radius: 5pt;
   display: flex;
   padding: 10px;
+  width: fit-content;
 }
