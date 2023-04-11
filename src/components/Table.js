@@ -12,8 +12,7 @@ class Table extends Component {
 
   deleteExpense = ({ target }) => {
     const { dispatch, expenses } = this.props;
-    const stateUpdated = expenses.filter((expense) => expense.id !== Number(target.id));
-    dispatch(deleteExpense(stateUpdated));
+    dispatch(deleteExpense(expenses, target));
   };
 
   render() {

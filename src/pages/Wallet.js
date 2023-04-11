@@ -61,17 +61,9 @@ class Wallet extends React.Component {
     const { dispatch } = this.props;
 
     if (editExchange) {
-      const obj = { value, currency, method, tag, description };
       const { expenses } = this.props;
-
-      const currentExpense = expenses.find((expense) => expense.id === Number(idEdit));
-
-      const exchangeUpdated = { ...currentExpense, ...obj };
-
-      const expensesUpdated = expenses
-        .map((expens) => (expens.id === exchangeUpdated.id ? exchangeUpdated : expens));
-
-      dispatch(editNewExpense(expensesUpdated));
+      const obj = { value, currency, method, tag, description };
+      dispatch(editNewExpense(expenses, idEdit, obj));
     } else {
       const { wallet } = store.getState();
       const expenseID = wallet.expenses.length;

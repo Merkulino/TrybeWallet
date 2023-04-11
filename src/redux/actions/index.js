@@ -20,11 +20,12 @@ const requestPriceAPISuccessful = (data) => ({
   payload: data,
 });
 
-const deleteExpense = (expense) => {
-  console.log(expense);
+const deleteExpense = (expensesArray, target) => {
+  const stateUpdated = expensesArray
+    .filter((expense) => expense.id !== Number(target.id));
   return ({
     type: DELETE_EXPENSE,
-    payload: expense,
+    payload: stateUpdated,
   });
 };
 
@@ -33,12 +34,20 @@ const updateState = (expense) => ({
   payload: expense,
 });
 
-const editNewExpense = (expensesUpdated) => (
-  {
+const editNewExpense = (expenses, currenceExchangeId, stateValues) => {
+  const currentExpense = expenses
+    .find((expense) => expense.id === Number(currenceExchangeId));
+
+  const exchangeUpdated = { ...currentExpense, ...stateValues };
+
+  const expensesUpdated = expenses
+    .map((expens) => (expens.id === exchangeUpdated.id ? exchangeUpdated : expens));
+
+  return ({
     type: EDITNEWEXPENSE,
     payload: expensesUpdated,
-  }
-);
+  });
+};
 
 function requestExchangeAPI() {
   return async (dispatch) => {
