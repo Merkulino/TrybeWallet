@@ -4,16 +4,10 @@ import { connect } from 'react-redux';
 import '../styles/header.scss';
 
 class Header extends Component {
-  renderSumExchange = (expenses) => { // Refactor
-    const result = expenses.reduce((acc, { value, exchangeRates, currency }) => {
-      const exchangeValues = Object.values(exchangeRates);
-      const currCoin = exchangeValues.filter((coinVal) => coinVal.code === currency);
-
-      const reducerAcc = acc + Number(value)
-      * Number(currCoin[0].ask);
-
-      return reducerAcc;
-    }, 0);
+  renderSumExchange = (expenses) => {
+    const result = expenses
+      .reduce((acc, { value, currentCoinValue }) => acc + Number(value)
+      * Number(currentCoinValue), 0);
     return (Math.round(result * 100) / 100).toFixed(2);
   };
 

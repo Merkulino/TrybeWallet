@@ -58,6 +58,12 @@ function requestExchangeAPI() {
   };
 }
 
+// Filter exchenge coinValue selected from user. ex USD to BRL -> 4.93
+const currentCoin = (responseData, currency) => {
+  const exchangeValues = Object.values(responseData);
+  return exchangeValues.filter((coinVal) => coinVal.code === currency)[0].ask;
+};
+
 function requestPriceAPI(obj, id) {
   return async (dispatch) => {
     const response = await fetch('https://economia.awesomeapi.com.br/json/all');
@@ -66,6 +72,7 @@ function requestPriceAPI(obj, id) {
       id,
       ...obj,
       exchangeRates: coinPrice,
+      currentCoinValue: currentCoin(coinPrice, obj.currency),
     };
     dispatch(requestPriceAPISuccessful(objSave));
   };
